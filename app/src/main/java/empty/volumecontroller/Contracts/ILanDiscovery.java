@@ -8,6 +8,6 @@ import java.net.SocketException;
  */
 
 public interface ILanDiscovery {
-    InetAddress GetActiveDevices(String port);
+    InetAddress GetActiveDevices(int port);
     InetAddress GetLanBroadcastIP();
 }

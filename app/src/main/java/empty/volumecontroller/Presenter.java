@@ -4,6 +4,7 @@ import android.support.annotation.RequiresPermission;
 import android.widget.SeekBar;
 
 import empty.volumecontroller.Contracts.ILanDiscovery;
+import empty.volumecontroller.Contracts.ServerConfig;
 
 /**
  * Created by Karolis on 12/24/2016.
@@ -18,7 +19,7 @@ public class Presenter {
         _view = view;
         _model = new Model();
         _lanDiscovery = lanDiscovery;
-        _lanDiscovery.GetLanBroadcastIP();
+        _lanDiscovery.GetActiveDevices(ServerConfig.UDPPort);
     }
 
     public void HandleVolumeChanged(int volume)
