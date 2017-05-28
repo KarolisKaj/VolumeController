@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import empty.volumecontroller.Contracts.ILanDiscovery;
 import empty.volumecontroller.Contracts.ServerConfig;
 
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
  * Created by Karolis on 12/24/2016.
@@ -33,9 +32,11 @@ public class Presenter {
 
     }
 
-    public void HandleButtonClick(){
-       // CompletableFuture.supplyAsync(() -> _lanDiscovery.GetServer(ServerConfig.UDPPort)).get();
-
+    public void HandleButtonClick()  {
+        try {
+            CompletableFuture.supplyAsync(() -> _lanDiscovery.GetServer(ServerConfig.UDPPort)).get();
+        }
+        catch (Exception ex){}
        // volumeHostAddress = _lanDiscovery.GetServer(ServerConfig.UDPPort);
     }
 }
