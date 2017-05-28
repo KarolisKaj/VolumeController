@@ -2,12 +2,18 @@ package empty.volumecontroller.Services;
 
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Enumeration;
 
 import empty.volumecontroller.Contracts.ILanDiscovery;
@@ -44,19 +50,18 @@ public class LanDiscovery implements ILanDiscovery {
                         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, port);
                         c.send(sendPacket);
                     } catch (Exception e) {
-                        Log.d("Error", "Well that happend. Exception.");
+                        Log.d("Error", "Well that happen. Exception.");
                     }
                 }
             }
 
-            byte[] recvBuf = new byte[15000];
-            DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length,InetAddress.getByName("0.0.0.0"), port);
-            c.receive(receivePacket); // Wait a lil
+            // TCP, listen from server.
+            Socket connectionSocket =  new ServerSocket(port).accept();
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            String clientSentence = inFromClient.readLine();
 
-            String message = new String(receivePacket.getData()).trim();
-
-            if (message.equals(ServerConfig.ServerResponseString)) {
-                return receivePacket.getAddress();
+            if (clientSentence.equals(ServerConfig.ServerResponseString)) {
+                return  connectionSocket.getInetAddress();
             }
         } catch (IOException ex) {
             Log.d("Error", "Ups, failed to broadcast.");
