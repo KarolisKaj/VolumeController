@@ -37,4 +37,5 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.code.guice:guice:1.0'
 }

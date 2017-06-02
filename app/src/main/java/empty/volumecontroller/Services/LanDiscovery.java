@@ -19,6 +19,8 @@ import java.util.Enumeration;
 import empty.volumecontroller.Contracts.ILanDiscovery;
 import empty.volumecontroller.Contracts.ServerConfig;
 
+import static empty.volumecontroller.Contracts.ServerConfig.TCPPort;
+
 /**
  * Created by Karolis on 2/24/2017.
  */
@@ -30,7 +32,6 @@ public class LanDiscovery implements ILanDiscovery {
         DatagramSocket c = null;
         try {
             c = new DatagramSocket();
-
             c.setBroadcast(true);
             byte[] sendData = ServerConfig.ClientRequestString.getBytes();
 
@@ -55,19 +56,33 @@ public class LanDiscovery implements ILanDiscovery {
                 }
             }
 
-            // TCP, listen from server.
-            Socket connectionSocket =  new ServerSocket(port).accept();
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            String clientSentence = inFromClient.readLine();
-
-            if (clientSentence.equals(ServerConfig.ServerResponseString)) {
-                return  connectionSocket.getInetAddress();
-            }
         } catch (IOException ex) {
             Log.d("Error", "Ups, failed to broadcast.");
         } finally {
             if (c != null)
                 c.close();
+        }
+        throw new IllegalArgumentException("No server found. Shutting down.");
+    }
+
+    private InetAddress StartTCPListener() {
+        Socket connectionSocket = null;
+        try {
+            connectionSocket = new ServerSocket(TCPPort).accept();
+            connectionSocket.setReuseAddress(true);
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            String clientSentence = inFromClient.readLine();
+
+            if (clientSentence.equals(ServerConfig.ServerResponseString)) {
+                return connectionSocket.getInetAddress();
+            }
+        } catch (Exception ex) {
+            if (connectionSocket != null)
+                try {
+                    connectionSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
         throw new IllegalArgumentException("No server found. Shutting down.");
     }
