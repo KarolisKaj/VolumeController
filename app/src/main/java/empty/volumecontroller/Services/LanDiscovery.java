@@ -27,6 +27,12 @@ import static empty.volumecontroller.Contracts.ServerConfig.TCPPort;
 
 public class LanDiscovery implements ILanDiscovery {
 
+    private TCPProvider _tcpProvider;
+
+    public void LanDiscovery(TCPProvider tcpProvider) {
+        _tcpProvider = tcpProvider;
+    }
+
     @Override
     public InetAddress GetServer(int port) {
         DatagramSocket c = null;
@@ -66,10 +72,8 @@ public class LanDiscovery implements ILanDiscovery {
     }
 
     private InetAddress StartTCPListener() {
-        Socket connectionSocket = null;
         try {
-            connectionSocket = new ServerSocket(TCPPort).accept();
-            connectionSocket.setReuseAddress(true);
+            Socket connectionSocket = _tcpProvider.getTcpClient(TCPPort);
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             String clientSentence = inFromClient.readLine();
 
@@ -77,12 +81,6 @@ public class LanDiscovery implements ILanDiscovery {
                 return connectionSocket.getInetAddress();
             }
         } catch (Exception ex) {
-            if (connectionSocket != null)
-                try {
-                    connectionSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
         }
         throw new IllegalArgumentException("No server found. Shutting down.");
     }

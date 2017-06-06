@@ -18,14 +18,33 @@ public class ViewModel {
     {
         _deviceNameObservable.addObserver(observer);
     }
-    
-    private Observable _searchButtonObservable = new Observable();
-    public void searchButtonInvoked(String name)
+    private Observable _volumeObservable = new Observable();
+    public void setVolume(int volume)
     {
-        _searchButtonObservable.notifyObservers(name);
+        _volumeObservable.notifyObservers(volume);
     }
-    public void subscribeTosearchButtonInvoked(Observer observer)
+    public void subscribeToVolumeChange(Observer observer)
+    {
+        _volumeObservable.addObserver(observer);
+    }
+
+    private Observable _searchButtonObservable = new Observable();
+    public void searchButtonInvoked()
+    {
+        _searchButtonObservable.notifyObservers();
+    }
+    public void subscribeTosearchButtonInvokeChange(Observer observer)
     {
         _searchButtonObservable.addObserver(observer);
+    }
+
+    private Observable _isButtonInteractableObservable = new Observable();
+    public void setIsButtonInteractable(boolean value)
+    {
+        _isButtonInteractableObservable.notifyObservers(value);
+    }
+    public void subscribeToIsButtonInteractableChange(Observer observer)
+    {
+        _isButtonInteractableObservable.addObserver(observer);
     }
 }

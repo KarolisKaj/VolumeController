@@ -4,6 +4,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import empty.volumecontroller.Listeners.ButtonListener;
 import empty.volumecontroller.Listeners.SeekBarListener;
 
@@ -13,30 +16,36 @@ import empty.volumecontroller.Listeners.SeekBarListener;
 
 public class View {
     private ControllerActivity _view;
-    public void View(ControllerActivity view) {
+    private ViewModel _viewModel;
+
+    public void View(ControllerActivity view, ViewModel viewModel) {
         _view = view;
+        _viewModel = viewModel;
         CreateEvents();
     }
+
     private void CreateEvents() {
         ((SeekBar) _view.findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBarListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //  _presenter.HandleVolumeChanged(progress);
+                _viewModel.setVolume(progress);
             }
         });
 
-        ((Button) _view.findViewById(R.id.button)).setOnClickListener(new ButtonListener() {
+        _view.findViewById(R.id.button).setOnClickListener(new ButtonListener() {
             public void onClick(android.view.View v) {
-                //    _presenter.HandleButtonClick();
+                _viewModel.searchButtonInvoked();
             }
+        });
+
+        _viewModel.subscribeToDeviceNameChange((o, arg) -> setDeviceName((String) arg));
+        _viewModel.subscribeToVolumeChange((o, arg) -> {
+            if (((SeekBar) _view.findViewById(R.id.seekBar)).getProgress() == (int) arg)
+                ((SeekBar) _view.findViewById(R.id.seekBar)).setProgress((int) arg);
         });
     }
 
     public void setDeviceName(String name) {
         ((TextView) _view.findViewById(R.id.textDevice)).setText(name);
-    }
-
-    public String getDeviceName() {
-        return (String) ((TextView) _view.findViewById(R.id.textDevice)).getText();
     }
 
     public void setButtonInteractable(boolean isInteractable) {

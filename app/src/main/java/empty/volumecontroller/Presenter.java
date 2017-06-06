@@ -24,6 +24,7 @@ public class Presenter {
 
         _viewModel = viewModel;
         _lanDiscovery = lanDiscovery;
+        CreateEvents();
     }
 
     public void HandleVolumeChanged(int volume) {
@@ -32,11 +33,22 @@ public class Presenter {
 
     public void HandleButtonClick() {
         try {
+            _viewModel.setIsButtonInteractable(false);
             CompletableFuture.supplyAsync(() -> _lanDiscovery.GetServer(ServerConfig.UDPPort)).get();
             _viewModel.setDeviceName("Boom");
 
         } catch (Exception ex) {
         }
+        finally {
+            _viewModel.setIsButtonInteractable(true);
+        }
         // volumeHostAddress = _lanDiscovery.GetServer(ServerConfig.UDPPort);
+    }
+
+    private void CreateEvents() {
+        _viewModel.subscribeToVolumeChange((o, arg) -> {
+
+        });
+        _viewModel.subscribeTosearchButtonInvokeChange((o, arg) -> HandleButtonClick());
     }
 }
