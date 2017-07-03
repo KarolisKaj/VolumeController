@@ -2,6 +2,8 @@ package empty.volumecontroller.Services;
 
 import android.util.Log;
 
+import com.google.inject.Inject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class LanDiscovery implements ILanDiscovery {
 
     private TCPProvider _tcpProvider;
 
+    @Inject
     public void LanDiscovery(TCPProvider tcpProvider) {
         _tcpProvider = tcpProvider;
     }

@@ -4,6 +4,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,6 +20,7 @@ public class View {
     private ControllerActivity _view;
     private ViewModel _viewModel;
 
+    @Inject
     public void View(ControllerActivity view, ViewModel viewModel) {
         _view = view;
         _viewModel = viewModel;

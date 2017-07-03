@@ -20,8 +20,8 @@ public class Presenter {
     private InetAddress volumeHostAddress;
     private ViewModel _viewModel;
 
+    @Inject
     public Presenter(ILanDiscovery lanDiscovery, ViewModel viewModel) {
-
         _viewModel = viewModel;
         _lanDiscovery = lanDiscovery;
         CreateEvents();
@@ -38,8 +38,7 @@ public class Presenter {
             _viewModel.setDeviceName("Boom");
 
         } catch (Exception ex) {
-        }
-        finally {
+        } finally {
             _viewModel.setIsButtonInteractable(true);
         }
         // volumeHostAddress = _lanDiscovery.GetServer(ServerConfig.UDPPort);
@@ -47,7 +46,7 @@ public class Presenter {
 
     private void CreateEvents() {
         _viewModel.subscribeToVolumeChange((o, arg) -> {
-
+            // TODO: Call API to change volume on device accordingly
         });
         _viewModel.subscribeTosearchButtonInvokeChange((o, arg) -> HandleButtonClick());
     }
