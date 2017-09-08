@@ -2,6 +2,9 @@ package empty.volumecontroller;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
+
+import empty.volumecontroller.Utilities.NotifyingObserver;
 
 /**
  * Created by Karolis on 6/2/2017.
@@ -9,7 +12,7 @@ import java.util.Observer;
 
 public class ViewModel {
 
-    private Observable _deviceNameObservable = new Observable();
+    private Observable _deviceNameObservable = new NotifyingObserver();
     public void setDeviceName(String name)
     {
         _deviceNameObservable.notifyObservers(name);
@@ -18,7 +21,7 @@ public class ViewModel {
     {
         _deviceNameObservable.addObserver(observer);
     }
-    private Observable _volumeObservable = new Observable();
+    private Observable _volumeObservable = new NotifyingObserver();
     public void setVolume(int volume)
     {
         _volumeObservable.notifyObservers(volume);
@@ -28,17 +31,17 @@ public class ViewModel {
         _volumeObservable.addObserver(observer);
     }
 
-    private Observable _searchButtonObservable = new Observable();
+    private Observable _searchButtonObservable = new NotifyingObserver();
     public void searchButtonInvoked()
     {
-        _searchButtonObservable.notifyObservers(null);
+        _searchButtonObservable.notifyObservers(UUID.randomUUID());
     }
     public void subscribeTosearchButtonInvokeChange(Observer observer)
     {
         _searchButtonObservable.addObserver(observer);
     }
 
-    private Observable _isButtonInteractableObservable = new Observable();
+    private Observable _isButtonInteractableObservable = new NotifyingObserver();
     public void setIsButtonInteractable(boolean value)
     {
         _isButtonInteractableObservable.notifyObservers(value);
