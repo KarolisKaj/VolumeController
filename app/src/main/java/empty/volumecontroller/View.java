@@ -4,7 +4,6 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,8 +19,8 @@ public class View {
     private ControllerActivity _view;
     private ViewModel _viewModel;
 
-    @Inject
-    public void View(ControllerActivity view, ViewModel viewModel) {
+
+    public View(ControllerActivity view, ViewModel viewModel) {
         _view = view;
         _viewModel = viewModel;
         CreateEvents();
@@ -40,7 +39,9 @@ public class View {
             }
         });
 
-        _viewModel.subscribeToDeviceNameChange((o, arg) -> setDeviceName((String) arg));
+        _viewModel.subscribeToDeviceNameChange((o, arg) -> {
+            setDeviceName((String) arg);
+        });
         _viewModel.subscribeToVolumeChange((o, arg) -> {
             if (((SeekBar) _view.findViewById(R.id.seekBar)).getProgress() == (int) arg)
                 ((SeekBar) _view.findViewById(R.id.seekBar)).setProgress((int) arg);

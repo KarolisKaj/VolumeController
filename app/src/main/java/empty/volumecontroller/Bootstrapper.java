@@ -1,19 +1,24 @@
 package empty.volumecontroller;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import empty.volumecontroller.Contracts.ILanDiscovery;
+import empty.volumecontroller.Contracts.ITCPProviderService;
+import empty.volumecontroller.Services.LanDiscovery;
+import empty.volumecontroller.Services.TCPProvider;
+
 
 /**
  * Created by Karolis on 6/1/2017.
  */
 
-public class Bootstrapper implements IBootstrapper {
-    private Injector _injector;
+public class Bootstrapper {
 
-    public void Create() {
-    //    _injector = Guice.createInjector(new ConfigurationModule());
-    }
 
-    public void Start() {
+    public void Create(ControllerActivity activity) {
+        ITCPProviderService itcpProviderService = new TCPProvider();
+        ILanDiscovery landDiscovery = new LanDiscovery(itcpProviderService);
+
+        ViewModel vm = new ViewModel();
+        View view = new View(activity, vm);
+        Presenter presenter = new Presenter(landDiscovery, vm);
     }
 }

@@ -34,7 +34,8 @@
         android:textSize="24dp"
         android:id="@+id/textDevice"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:text="No host assigned"/>
 
     <Button
         android:text="Search for host..."
@@ -44,6 +45,7 @@
         android:id="@+id/button"
         android:layout_below="@+id/seekBar"
         android:layout_alignStart="@+id/textView1"
-        android:layout_toStartOf="@+id/textDevice" />
+        android:layout_toStartOf="@+id/textDevice"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

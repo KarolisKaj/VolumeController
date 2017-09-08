@@ -1,7 +1,5 @@
 package empty.volumecontroller;
 
-import com.google.inject.Inject;
-
 import java.net.InetAddress;
 import java.util.Observable;
 import java.util.Observer;
@@ -20,7 +18,6 @@ public class Presenter {
     private InetAddress volumeHostAddress;
     private ViewModel _viewModel;
 
-    @Inject
     public Presenter(ILanDiscovery lanDiscovery, ViewModel viewModel) {
         _viewModel = viewModel;
         _lanDiscovery = lanDiscovery;
@@ -32,10 +29,11 @@ public class Presenter {
     }
 
     public void HandleButtonClick() {
+        _viewModel.setDeviceName("Boom");
+
         try {
             _viewModel.setIsButtonInteractable(false);
             CompletableFuture.supplyAsync(() -> _lanDiscovery.GetServer(ServerConfig.UDPPort)).get();
-            _viewModel.setDeviceName("Boom");
 
         } catch (Exception ex) {
         } finally {
@@ -46,8 +44,11 @@ public class Presenter {
 
     private void CreateEvents() {
         _viewModel.subscribeToVolumeChange((o, arg) -> {
+            _viewModel.setDeviceName("Boom");
             // TODO: Call API to change volume on device accordingly
         });
-        _viewModel.subscribeTosearchButtonInvokeChange((o, arg) -> HandleButtonClick());
+        _viewModel.subscribeTosearchButtonInvokeChange((o, arg) -> {
+            HandleButtonClick();
+        });
     }
 }

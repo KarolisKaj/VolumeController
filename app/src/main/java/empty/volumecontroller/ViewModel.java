@@ -31,7 +31,7 @@ public class ViewModel {
     private Observable _searchButtonObservable = new Observable();
     public void searchButtonInvoked()
     {
-        _searchButtonObservable.notifyObservers();
+        _searchButtonObservable.notifyObservers(null);
     }
     public void subscribeTosearchButtonInvokeChange(Observer observer)
     {

@@ -1,8 +1,10 @@
 package empty.volumecontroller.Services;
 
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 import empty.volumecontroller.Contracts.ITCPProviderService;
 
@@ -13,6 +15,7 @@ import empty.volumecontroller.Contracts.ITCPProviderService;
 
 public class TCPProvider implements ITCPProviderService {
 
+    public TCPProvider(){}
     private ConcurrentHashMap _tcpClients = new ConcurrentHashMap();
 
     @Override

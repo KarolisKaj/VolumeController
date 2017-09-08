@@ -3,16 +3,15 @@ package empty.volumecontroller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+
+import empty.volumecontroller.Contracts.ILanDiscovery;
+
 public class ControllerActivity extends AppCompatActivity {
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
 
-        IBootstrapper bootstrapper = new Bootstrapper();
-        bootstrapper.Create();
-        bootstrapper.Start();
+        Bootstrapper bootstrapper = new Bootstrapper();
+        bootstrapper.Create(this);
     }
-
-
 }
