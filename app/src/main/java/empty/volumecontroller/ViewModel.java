@@ -34,7 +34,7 @@ public class ViewModel {
     private Observable _searchButtonObservable = new NotifyingObserver();
     public void searchButtonInvoked()
     {
-        _searchButtonObservable.notifyObservers(UUID.randomUUID());
+        _searchButtonObservable.notifyObservers();
     }
     public void subscribeTosearchButtonInvokeChange(Observer observer)
     {

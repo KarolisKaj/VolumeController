@@ -8,4 +8,10 @@ import java.util.Observable;
 
 public class NotifyingObserver extends Observable {
     public NotifyingObserver() {  setChanged(); }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        super.notifyObservers(arg);
+        setChanged();
+    }
 }

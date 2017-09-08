@@ -3,13 +3,11 @@ package empty.volumecontroller.Services;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -18,7 +16,6 @@ import java.util.Enumeration;
 
 
 import empty.volumecontroller.Contracts.ILanDiscovery;
-import empty.volumecontroller.Contracts.ITCPProviderService;
 import empty.volumecontroller.Contracts.ServerConfig;
 
 import static empty.volumecontroller.Contracts.ServerConfig.TCPPort;
@@ -29,17 +26,16 @@ import static empty.volumecontroller.Contracts.ServerConfig.TCPPort;
 
 public class LanDiscovery implements ILanDiscovery {
 
-    private ITCPProviderService _tcpProvider;
+    ServerSocket _connectionSocket;
+    public LanDiscovery()
+    { try{
+        _connectionSocket = new ServerSocket(TCPPort);
+    }catch (Exception e){}}
 
-    public LanDiscovery(ITCPProviderService tcpProvider) {
-        _tcpProvider = tcpProvider;
-    }
 
     @Override
-    public InetAddress GetServer(int port) {
-        DatagramSocket c = null;
-        try {
-            c = new DatagramSocket();
+    public String Broadcast(int port) {
+        try (DatagramSocket c = new DatagramSocket()){
             c.setBroadcast(true);
             byte[] sendData = ServerConfig.ClientRequestString.getBytes();
 
@@ -63,27 +59,23 @@ public class LanDiscovery implements ILanDiscovery {
                     }
                 }
             }
-
         } catch (IOException ex) {
             Log.d("Error", "Ups, failed to broadcast.");
-        } finally {
-            if (c != null)
-                c.close();
         }
-        throw new IllegalArgumentException("No server found. Shutting down.");
+        return null;
     }
 
-    private InetAddress StartTCPListener() {
-        try {
-            Socket connectionSocket = _tcpProvider.getTcpClient(TCPPort);
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+    public InetAddress ListenTillReceivedInfoFromServer() {
+        try(Socket connectionSocket = _connectionSocket.accept();
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));) {
             String clientSentence = inFromClient.readLine();
 
             if (clientSentence.equals(ServerConfig.ServerResponseString)) {
                 return connectionSocket.getInetAddress();
             }
         } catch (Exception ex) {
+            Log.d("Error", "Ups, TCP failed.");
         }
-        throw new IllegalArgumentException("No server found. Shutting down.");
+        return null;
     }
 }

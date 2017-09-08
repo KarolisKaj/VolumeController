@@ -1,10 +1,7 @@
 package empty.volumecontroller;
 
 import java.net.InetAddress;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import empty.volumecontroller.Contracts.ILanDiscovery;
 import empty.volumecontroller.Contracts.ServerConfig;
@@ -17,6 +14,7 @@ public class Presenter {
     private ILanDiscovery _lanDiscovery;
     private InetAddress volumeHostAddress;
     private ViewModel _viewModel;
+    private InetAddress _hostIp;
 
     public Presenter(ILanDiscovery lanDiscovery, ViewModel viewModel) {
         _viewModel = viewModel;
@@ -29,17 +27,18 @@ public class Presenter {
     }
 
     public void HandleButtonClick() {
-        _viewModel.setDeviceName("Boom");
-
         try {
             _viewModel.setIsButtonInteractable(false);
-            CompletableFuture.supplyAsync(() -> _lanDiscovery.GetServer(ServerConfig.UDPPort)).get();
-
+            CompletableFuture.supplyAsync(() -> {
+                CompletableFuture.supplyAsync(() -> _lanDiscovery.ListenTillReceivedInfoFromServer()).whenCompleteAsync((value, error) -> {
+                    _hostIp = value;
+                });
+                return _lanDiscovery.Broadcast(ServerConfig.UDPPort);
+            }).whenCompleteAsync((value, error) -> _viewModel.setIsButtonInteractable(true));
         } catch (Exception ex) {
+            System.out.print("");
         } finally {
-            _viewModel.setIsButtonInteractable(true);
         }
-        // volumeHostAddress = _lanDiscovery.GetServer(ServerConfig.UDPPort);
     }
 
     private void CreateEvents() {

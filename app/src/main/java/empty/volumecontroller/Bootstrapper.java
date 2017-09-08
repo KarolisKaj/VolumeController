@@ -1,9 +1,7 @@
 package empty.volumecontroller;
 
 import empty.volumecontroller.Contracts.ILanDiscovery;
-import empty.volumecontroller.Contracts.ITCPProviderService;
 import empty.volumecontroller.Services.LanDiscovery;
-import empty.volumecontroller.Services.TCPProvider;
 
 
 /**
@@ -14,8 +12,7 @@ public class Bootstrapper {
 
 
     public void Create(ControllerActivity activity) {
-        ITCPProviderService itcpProviderService = new TCPProvider();
-        ILanDiscovery landDiscovery = new LanDiscovery(itcpProviderService);
+        ILanDiscovery landDiscovery = new LanDiscovery();
 
         ViewModel vm = new ViewModel();
         View view = new View(activity, vm);
