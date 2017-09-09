@@ -3,6 +3,7 @@ package empty.volumecontroller;
 import java.net.InetAddress;
 import java.util.concurrent.CompletableFuture;
 
+import empty.volumecontroller.Contracts.IDeviceControllerService;
 import empty.volumecontroller.Contracts.ILanDiscovery;
 import empty.volumecontroller.Contracts.ServerConfig;
 
@@ -12,13 +13,14 @@ import empty.volumecontroller.Contracts.ServerConfig;
  */
 public class Presenter {
     private ILanDiscovery _lanDiscovery;
-    private InetAddress volumeHostAddress;
     private ViewModel _viewModel;
     private InetAddress _hostIp;
+    private IDeviceControllerService _deviceControllerService;
 
-    public Presenter(ILanDiscovery lanDiscovery, ViewModel viewModel) {
+    public Presenter(ILanDiscovery lanDiscovery, IDeviceControllerService deviceControllerService, ViewModel viewModel) {
         _viewModel = viewModel;
         _lanDiscovery = lanDiscovery;
+        _deviceControllerService = deviceControllerService;
         CreateEvents();
     }
 
@@ -32,6 +34,7 @@ public class Presenter {
             CompletableFuture.supplyAsync(() -> {
                 CompletableFuture.supplyAsync(() -> _lanDiscovery.ListenTillReceivedInfoFromServer()).whenCompleteAsync((value, error) -> {
                     _hostIp = value;
+                    _viewModel.setDeviceName(_hostIp.getHostAddress());
                 });
                 return _lanDiscovery.Broadcast(ServerConfig.UDPPort);
             }).whenCompleteAsync((value, error) -> _viewModel.setIsButtonInteractable(true));
@@ -43,7 +46,10 @@ public class Presenter {
 
     private void CreateEvents() {
         _viewModel.subscribeToVolumeChange((o, arg) -> {
-            _viewModel.setDeviceName("Boom");
+            _deviceControllerService.UpdateDeviceVolume(_hostIp, (int)arg).whenCompleteAsync((value, error) ->
+            {
+
+            });
             // TODO: Call API to change volume on device accordingly
         });
         _viewModel.subscribeTosearchButtonInvokeChange((o, arg) -> {
