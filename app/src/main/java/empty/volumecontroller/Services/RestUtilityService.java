@@ -23,6 +23,8 @@ public class RestUtilityService {
         return Request(url, false);
     }
 
+
+    // TODO : sort out json convertion
     private static <T> T Request(String url, boolean isPost) {
         try {
             Log.d("Something", url);

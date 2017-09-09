@@ -39,7 +39,6 @@ public class Presenter {
                 return _lanDiscovery.Broadcast(ServerConfig.UDPPort);
             }).whenCompleteAsync((value, error) -> _viewModel.setIsButtonInteractable(true));
         } catch (Exception ex) {
-            System.out.print("");
         } finally {
         }
     }
