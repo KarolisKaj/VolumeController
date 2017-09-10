@@ -35,6 +35,7 @@
         android:id="@+id/textDevice"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:textAlignment="textEnd"
         android:text="No host assigned"/>
 
     <Button
